@@ -1,0 +1,9 @@
+{
+  "appService.showBuildDuringDeployPrompt": false,
+  "appService.defaultWebAppToDeploy": "/subscriptions/607aba11-a47a-4d03-a2e0-b83158fff180/resourceGroups/jitesh/providers/Microsoft.Web/sites/file-upload-server",
+  "appService.deploySubpath": "",
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ]
+}
