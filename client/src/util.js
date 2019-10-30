@@ -7,5 +7,6 @@ export const ALLOWED_FILE_TYPES = [
 ]
 
 export const ERROR_MESSAGES = [
-  `Invalid file type, allowed file types are ${ALLOWED_FILE_TYPES.toString()}`
+  `Invalid file type, allowed file types are ${ALLOWED_FILE_TYPES.toString()}`,
+  `Something went wrong`
 ]

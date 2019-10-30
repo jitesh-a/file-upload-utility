@@ -78,6 +78,14 @@ const Uploads = () => {
     })
   }
 
+  const getSimplifiedErrorMesage = (error) => {
+    if (error && error.response && error.response.data && error.response.data.error) {
+      return error.response.data.error;
+    } else {
+      return ERROR_MESSAGES[1];
+    }
+  }
+
   const handleUpload = (e, id) => {
 
     if (!state || !state[id]) {
@@ -125,9 +133,7 @@ const Uploads = () => {
             ...state,
             [id]: '',
             [`loaded${id}`]: 0,
-            [`error${id}`]: error.response.data.error ?
-              error.response.data.error :
-              'Something went wrong',
+            [`error${id}`]: getSimplifiedErrorMesage(error)
           })
         })
     }
@@ -135,12 +141,12 @@ const Uploads = () => {
 
   }
 
-  const handleUploadProgressText = (event, id) => {
-    setState({
-      ...state,
-      [`loaded${id}`]: event.target.value
-    })
-  }
+  // const handleUploadProgressText = (event, id) => {
+  //   setState({
+  //     ...state,
+  //     [`loaded${id}`]: event.target.value
+  //   })
+  // }
 
   const getFileName = (id) => {
     if (state[id].name) {
