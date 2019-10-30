@@ -3,59 +3,57 @@ var router = express.Router();
 
 
 // allowed file types
-const allowedFileTypes = [
+const ALLOWED_FILE_TYPES = [
   'application/pdf',
   'video/mp4'
 ]
 
 // allowed file sizes
-const allowedFileSizes = [
+const ALLOWED_FILE_SIZES = [
   {
-    key: allowedFileTypes[0],
+    key: ALLOWED_FILE_TYPES[0],
     value: 4194304
   },
   {
-    key: allowedFileTypes[1],
+    key: ALLOWED_FILE_TYPES[1],
     value: 104857600
   }
 ]
 
-// method to validate file type
-const validateileType = (fileType) => {
-  return allowedFileTypes.indexOf(fileType);
-}
-
 // error messages
-const errorMessages = [
-  `Invalid file type, allowed file types are ${allowedFileTypes.toString()}`,
-  `Violated file size, allowed size are ${JSON.stringify(allowedFileSizes)}`
+const ERROR_MESSAGES = [
+  `Invalid file type, allowed file types are ${ALLOWED_FILE_TYPES.toString()}`,
+  `Violated file size, allowed size are ${JSON.stringify(ALLOWED_FILE_SIZES)}`
 ]
 
-// method to validate file size
-const validateFileSize = (fileType, fileSize) => {
-  return (fileType === allowedFileSizes[0].key && fileSize <= allowedFileSizes[0].value)
-    || (fileType === allowedFileSizes[1].key && fileSize <= allowedFileSizes[1].value)
+// method to validate file type
+const validateileType = (mimeType) => {
+  return ALLOWED_FILE_TYPES.indexOf(mimeType);
 }
+
+// method to validate file size
+const validateFileSize = (mimeType, size) => {
+  return (mimeType === ALLOWED_FILE_SIZES[0].key && size <= ALLOWED_FILE_SIZES[0].value)
+    || (mimeType === ALLOWED_FILE_SIZES[1].key && size <= ALLOWED_FILE_SIZES[1].value)
+}
+
 /* POST upload */
 router.post('/', function (req, res, next) {
-  let uploadFile = req.files.file;
-  const fileName = req.files.file.name;
-  const fileType = req.files.file.mimetype;
-  const fileSize = req.files.file.size;
+  const { file, name, mimeType, size } = req.files;
 
   // check for file type
-  if (validateileType(fileType) === -1) {
+  if (validateileType(mimeType) === -1) {
     res.status(400).json({
-      error: errorMessages[0],
+      error: ERROR_MESSAGES[0],
     })
   } // check for file size
-  else if (!validateFileSize(fileType, fileSize)) {
+  else if (!validateFileSize(mimeType, size)) {
     res.status(400).json({
-      error: errorMessages[1],
+      error: ERROR_MESSAGES[1],
     })
   } else {
     uploadFile.mv(
-      `${__dirname}/../public/files/${fileName}`,
+      `${__dirname}/../public/files/${name}`,
       function (err) {
         if (err) {
           return res.status(500).json({
@@ -63,7 +61,7 @@ router.post('/', function (req, res, next) {
           })
         }
         res.json({
-          file: `public/${req.files.file.name}`,
+          file: `public/${name}`,
         })
       },
     )

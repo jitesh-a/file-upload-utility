@@ -1,12 +1,15 @@
+
 import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
+import dotenv from 'dotenv';
+
 import { lightTheme, darkTheme } from './theme';
 import { GlobalStyles } from './global';
-
 import { Uploads } from './components/Uploads';
 
 import './App.css';
 
+dotenv.config();
 
 function App() {
 

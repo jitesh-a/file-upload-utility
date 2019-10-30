@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react';
+import axios from 'axios';
 
 import { CommonDocument } from '../CommonDocument';
-import './Uploads.css'
 
-const endpoint = 'http://localhost:8080/upload';
+import { ENDPOINT, ALLOWED_FILE_TYPES, ERROR_MESSAGES } from '../../util';
+
+import './Uploads.css'
 
 const Uploads = () => {
 
-  const ids = ['required1', 'required2', 'optional3', 'optional5', 'optinal5'];
+  const ids = ['required1', 'required2', 'optional3', 'optional5', 'optional5'];
   const initialState = {
     [ids[0]]: '',
     [ids[1]]: '',
@@ -83,29 +84,48 @@ const Uploads = () => {
       return;
     }
 
-    const data = new FormData()
-    data.append('file', state[id], state[id].name)
+    const data = new FormData();
+    const { name, mimetype } = state[id];
+
+    if (ALLOWED_FILE_TYPES.indexOf(mimetype) === -1) {
+      setState({
+        ...state,
+        [`error${id}`]: ERROR_MESSAGES[0]
+      })
+    }
+
+    data.append('file', state[id], name);
 
     axios
-      .post(endpoint, data, {
-        onUploadProgress: ProgressEvent => {
-          console.log((ProgressEvent.loaded / ProgressEvent.total) * 100);
-          setState({
-            ...state,
-            [`loaded${id}`]: ((ProgressEvent.loaded / ProgressEvent.total) * 100).toFixed(),
-          })
-        },
-      })
+      .post(ENDPOINT,
+        data,
+        {
+          onUploadProgress: ProgressEvent => {
+            console.info((ProgressEvent.loaded / ProgressEvent.total) * 100);
+            if (state[id] === '') {
+              // cancel();
+              // return;
+            } else {
+              setState({
+                ...state,
+                [`loaded${id}`]: ((ProgressEvent.loaded / ProgressEvent.total) * 100).toFixed(),
+              })
+            }
+
+          },
+        })
       .then(res => {
         console.log(res.statusText)
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
         setState({
           ...state,
           [id]: '',
           [`loaded${id}`]: 0,
-          [`error${id}`]: error.error ? error.error : 'Something went wrong',
+          [`error${id}`]: error.response.data.error ?
+            error.response.data.error :
+            'Something went wrong',
         })
       })
   }
