@@ -9,7 +9,7 @@ import './Uploads.css'
 
 const Uploads = () => {
 
-  const ids = ['required1', 'required2', 'optional3', 'optional5', 'optional5'];
+  const ids = ['required1', 'required2', 'optional3', 'optional4', 'optional5'];
   const initialState = {
     [ids[0]]: '',
     [ids[1]]: '',
