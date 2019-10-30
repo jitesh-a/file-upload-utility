@@ -54,7 +54,7 @@ const CommonDocument = (props) => {
 
   const getUploadProgressBackgroundStyle = () => {
     const { loaded } = props;
-    return `linear-gradient(90deg, ${theme.backgroundAndBorder} ${loaded}%, ${theme.background} 0%) !important`;
+    return `linear-gradient(90deg, ${theme.backgroundAndBorder} ${loaded}%, ${theme.body} 0%)`;
   }
 
   return (
@@ -70,7 +70,7 @@ const CommonDocument = (props) => {
             <input
               className="form-control form-control-lg input-loading"
               style={{
-                backgroundColor: getUploadProgressBackgroundStyle()
+                background: getUploadProgressBackgroundStyle()
               }}
               value={`${props.loaded}%`}
               type="text"

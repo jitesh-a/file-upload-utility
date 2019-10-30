@@ -39,7 +39,7 @@ export const GlobalStyles = createGlobalStyle`
   }
   .form-control {
     border: 1px solid ${({ theme }) => theme.backgroundAndBorder};
-    background: ${({ theme }) => theme.body} !important;
+    background-color: ${({ theme }) => theme.body} !important;
     color: ${({ theme }) => theme.text} !important;
   }
 `;
