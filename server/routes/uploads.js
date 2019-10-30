@@ -23,37 +23,40 @@ const ALLOWED_FILE_SIZES = [
 // error messages
 const ERROR_MESSAGES = [
   `Invalid file type, allowed file types are ${ALLOWED_FILE_TYPES.toString()}`,
-  `Violated file size, allowed size are ${JSON.stringify(ALLOWED_FILE_SIZES)}`
+  `Violated fileSize, allowed fileSize are ${JSON.stringify(ALLOWED_FILE_SIZES)}`
 ]
 
 // method to validate file type
-const validateileType = (mimeType) => {
-  return ALLOWED_FILE_TYPES.indexOf(mimeType);
+const validateileType = (fileType) => {
+  return ALLOWED_FILE_TYPES.indexOf(fileType);
 }
 
-// method to validate file size
-const validateFileSize = (mimeType, size) => {
-  return (mimeType === ALLOWED_FILE_SIZES[0].key && size <= ALLOWED_FILE_SIZES[0].value)
-    || (mimeType === ALLOWED_FILE_SIZES[1].key && size <= ALLOWED_FILE_SIZES[1].value)
+// method to validate file fileSize
+const validateFileSize = (fileType, fileSize) => {
+  return (fileType === ALLOWED_FILE_SIZES[0].key && fileSize <= ALLOWED_FILE_SIZES[0].value)
+    || (fileType === ALLOWED_FILE_SIZES[1].key && fileSize <= ALLOWED_FILE_SIZES[1].value)
 }
 
 /* POST upload */
 router.post('/', function (req, res, next) {
-  const { file, name, mimeType, size } = req.files;
+  let uploadFile = req.files.file;
+  const fileName = req.files.file.name;
+  const fileType = req.files.file.mimetype;
+  const fileSize = req.files.file.size;
 
   // check for file type
-  if (validateileType(mimeType) === -1) {
+  if (validateileType(fileType) === -1) {
     res.status(400).json({
       error: ERROR_MESSAGES[0],
     })
-  } // check for file size
-  else if (!validateFileSize(mimeType, size)) {
+  } // check for file fileSize
+  else if (!validateFileSize(fileType, fileSize)) {
     res.status(400).json({
       error: ERROR_MESSAGES[1],
     })
   } else {
     uploadFile.mv(
-      `${__dirname}/../public/files/${name}`,
+      `${__dirname}/../public/files/${fileName}`,
       function (err) {
         if (err) {
           return res.status(500).json({
@@ -61,7 +64,7 @@ router.post('/', function (req, res, next) {
           })
         }
         res.json({
-          file: `public/${name}`,
+          file: `public/${fileName}`,
         })
       },
     )

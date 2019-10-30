@@ -85,49 +85,54 @@ const Uploads = () => {
     }
 
     const data = new FormData();
-    const { name, mimetype } = state[id];
+    const { name, type } = state[id];
 
-    if (ALLOWED_FILE_TYPES.indexOf(mimetype) === -1) {
+    if (ALLOWED_FILE_TYPES.indexOf(type) === -1) {
       setState({
         ...state,
         [`error${id}`]: ERROR_MESSAGES[0]
       })
     }
 
-    data.append('file', state[id], name);
+    else {
 
-    axios
-      .post(ENDPOINT,
-        data,
-        {
-          onUploadProgress: ProgressEvent => {
-            console.info((ProgressEvent.loaded / ProgressEvent.total) * 100);
-            if (state[id] === '') {
-              // cancel();
-              // return;
-            } else {
-              setState({
-                ...state,
-                [`loaded${id}`]: ((ProgressEvent.loaded / ProgressEvent.total) * 100).toFixed(),
-              })
-            }
+      data.append('file', state[id], name);
 
-          },
+      axios
+        .post(ENDPOINT,
+          data,
+          {
+            onUploadProgress: ProgressEvent => {
+              console.info((ProgressEvent.loaded / ProgressEvent.total) * 100);
+              if (state[id] === '') {
+                // cancel();
+                // return;
+              } else {
+                setState({
+                  ...state,
+                  [`loaded${id}`]: ((ProgressEvent.loaded / ProgressEvent.total) * 100).toFixed(),
+                })
+              }
+
+            },
+          })
+        .then(res => {
+          console.log(res.statusText)
         })
-      .then(res => {
-        console.log(res.statusText)
-      })
-      .catch(error => {
-        console.error(error);
-        setState({
-          ...state,
-          [id]: '',
-          [`loaded${id}`]: 0,
-          [`error${id}`]: error.response.data.error ?
-            error.response.data.error :
-            'Something went wrong',
+        .catch(error => {
+          console.error(error);
+          setState({
+            ...state,
+            [id]: '',
+            [`loaded${id}`]: 0,
+            [`error${id}`]: error.response.data.error ?
+              error.response.data.error :
+              'Something went wrong',
+          })
         })
-      })
+    }
+
+
   }
 
   const handleUploadProgressText = (event, id) => {
