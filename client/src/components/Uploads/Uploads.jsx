@@ -17,11 +17,6 @@ const Uploads = () => {
     [ids[2]]: '',
     [ids[3]]: '',
     [ids[4]]: '',
-    [`loaded${ids[0]}`]: 0,
-    [`loaded${ids[1]}`]: 0,
-    [`loaded${ids[2]}`]: 0,
-    [`loaded${ids[3]}`]: 0,
-    [`loaded${ids[4]}`]: 0,
     [`error${ids[0]}`]: '',
     [`error${ids[1]}`]: '',
     [`error${ids[2]}`]: '',
@@ -137,9 +132,15 @@ const Uploads = () => {
           data,
           {
             onUploadProgress: ProgressEvent => {
-              setLoading({
-                [`loaded${id}`]: Number(((ProgressEvent.loaded / ProgressEvent.total) * 100).toFixed())
-              })
+              if (name === '') {
+                // axios.re
+                return;
+              } else {
+                setLoading({
+                  ...loading,
+                  [`loaded${id}`]: Number(((ProgressEvent.loaded / ProgressEvent.total) * 100).toFixed())
+                })
+              }
             }
           })
         .then(res => {
