@@ -47,7 +47,7 @@ const Uploads = () => {
   })
 
   const isUploadIconEnabled = (id, cssClass) => {
-    if (state[id] === '' || state[`loaded${id}`] !== 0) {
+    if (state[id] === '' || loading[`loaded${id}`] !== 0) {
       return `${cssClass} icon-disabled`;
     } else {
       return `${cssClass} icon-enabled`;
@@ -55,7 +55,7 @@ const Uploads = () => {
   }
 
   const isCancelIconEnabled = (id, cssClass) => {
-    if (state[`loaded${id}`] !== 0) {
+    if (loading[`loaded${id}`] !== 0) {
       return `${cssClass} icon-enabled`;
     } else {
       return `${cssClass} icon-disabled`;
