@@ -1,4 +1,4 @@
-export const ENDPOINT = 'http://localhost:8080/upload';
+export const ENDPOINT = 'https://file-upload-server.azurewebsites.net/upload';
 
 // allowed file types
 export const ALLOWED_FILE_TYPES = [
